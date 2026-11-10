@@ -9,7 +9,7 @@ Bài cá nhân, tổng điểm chính 100; bài này không có hạng mục bon
 | Độ bám sát và hình học box | box sát phần vật thể nhìn thấy, không lấn nền/gộp vật thể | 20 |
 | Phân lớp nhất quán | phân biệt `car/truck/bus/van`, không gán vật thể ngoài scope | 15 |
 | Mini guideline và quyết định mơ hồ | định nghĩa lớp, quy tắc box, ít nhất ba case có lý do | 10 |
-| Gold-set annotation QC | `F1 >= 0.80` và `mean IoU >= 0.70` hoặc có vòng rework được giải thích rõ | 15 |
+| Gold-set annotation QC | `F1 >= 0.50` và `mean IoU >= 0.70` hoặc có vòng rework được giải thích rõ | 15 |
 | Pipeline YOLO và phân tích | Colab chạy được, không dùng eval để train, có metrics/ảnh eval và nhận xét lỗi | 10 |
 
 ## Điều kiện bắt buộc

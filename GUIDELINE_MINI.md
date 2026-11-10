@@ -21,10 +21,10 @@
 
 ## 3. Ghi lại quyết định cho ít nhất ba ca mơ hồ
 
-*Bảng dưới là mẫu tình huống cần kiểm tra trên ảnh train. Chỉ giữ trường hợp thực sự xuất hiện, thay mã ảnh và điều chỉnh quyết định theo quan sát của bản thân.*
+*Các ví dụ dưới đây được chọn từ ảnh train. Quyết định chỉ áp dụng cho phần xe nhìn thấy trong ảnh; không suy đoán phần bị che hoặc nằm ngoài khung.*
 
 | Ảnh | Tình huống | Quyết định cuối | Lý do theo schema |
 |---|---|---|---|
-| `drive_XXX.jpg` | Một ô tô bị xe phía trước che một phần. | [Ghi quyết định thực tế] | Nếu nhận diện được loại xe, gán một box quanh phần nhìn thấy, không đoán phần bị che. |
-| `drive_YYY.jpg` | Một phương tiện nằm sát mép ảnh, một phần thân xe nằm ngoài khung hình. | [Ghi quyết định thực tế] | Nếu xác định được lớp xe, box chỉ bao quanh phần xuất hiện trong ảnh và chạm mép ảnh. |
-| `drive_ZZZ.jpg` | Một phương tiện có hình dạng khó phân biệt giữa `van` và `bus`. | [Ghi quyết định sau khi kiểm tra] | Xem xét đặc điểm và mục đích của xe. Nếu vẫn mơ hồ, hỏi giảng viên trước khi quyết định lớp. |
+| `drive_009.jpg` | Cảnh đông xe; xe buýt bị các xe khác che lấp một phần và chồng lấn với nhiều phương tiện. | Gán `bus` (2) cho xe có thân dài, nhiều cửa sổ hành khách; vẽ box riêng quanh phần xe buýt nhìn thấy. | Các đặc điểm thân xe và khoang hành khách đủ phân biệt xe buýt với xe con; không gộp box với xe bên cạnh hoặc ước lượng phần bị che. |
+| `drive_004.jpg` | Một xe con ở sát rìa phải, thân xe bị khung ảnh cắt. | Gán `car` (0) nếu phần còn lại đủ nhận diện; giới hạn box trong ảnh và để cạnh box chạm rìa phải. | Xe vẫn nhận diện được là xe con; phần nằm ngoài ảnh không được nội suy. |
+| `drive_002.jpg` | Xe van trắng bên trái xe buýt trắng ở giữa ảnh; các phương tiện có kích thước và hình dáng gần nhau trong cảnh đông xe. | Gán `van` (3) cho xe thân hộp, khoang kín; xe thân dài với nhiều cửa sổ hành khách là `bus` (2). | Dựa vào kiểu thân xe và đặc điểm khoang hành khách, không quyết định chỉ theo màu hoặc kích thước tương đối. Nếu không đủ dấu hiệu để phân biệt, hỏi giảng viên thay vì đoán. |
