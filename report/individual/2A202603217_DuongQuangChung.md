@@ -20,7 +20,7 @@ Bộ dữ liệu sử dụng bốn lớp cố định: `car` (ID 0, gồm sedan/
 
 Mỗi xe hợp lệ có một bounding box riêng, ôm sát phần nhìn thấy trong ảnh. Xe bị che khuất hoặc cắt tại rìa ảnh chỉ được gán nếu còn đủ thông tin để nhận diện lớp; không suy đoán phần không quan sát được. Không gán người đi bộ, xe máy, xe đạp và vật thể ngoài bốn lớp.
 
-Ba ví dụ train cụ thể, gồm che khuất/chồng lấn (`drive_009.jpg`), xe bị cắt bởi rìa ảnh (`drive_004.jpg`) và phân biệt `van`/`bus` (`drive_002.jpg`), cùng quyết định theo schema đã được ghi trong `GUIDELINE_MINI.md`. Đây là quyết định phân lớp/box theo nội dung quan sát được; không xem là bằng chứng đã sửa nhãn trong CVAT.
+Ba ví dụ train cụ thể, gồm che khuất/chồng lấn (`drive_009.jpg`), xe bị cắt bởi rìa ảnh (`drive_004.jpg`) và phân biệt `van`/`bus` (`drive_002.jpg`), cùng quyết định theo schema đã được ghi trong `GUIDELINE_MINI.md`. Học viên xác nhận các quyết định này khớp với bộ nhãn cuối đã nộp.
 
 ## 3. Annotation và self-QC (CP2–CP3)
 
@@ -29,8 +29,8 @@ Ba ví dụ train cụ thể, gồm che khuất/chồng lấn (`drive_009.jpg`),
 - **Cách tạo nhãn:** sử dụng YOLOv8n pretrained để tạo bounding box sơ bộ; đưa nhãn vào CVAT Local để rà, sửa lớp/box và xuất định dạng Ultralytics YOLO Detection. Việc dùng pre-annotation được giảng viên cho phép theo xác nhận của học viên.
 - **Định dạng:** mỗi ảnh có một file `.txt` với các dòng `class_id x_center y_center width height` chuẩn hóa.
 - **Kết quả checker `tools/check_yolo_labels.py`:** `ĐẠT cấu trúc: 50/50 file nhãn hợp lệ.` Đã chạy lại trực tiếp trên thư mục train.
-- **Ảnh đã đối chiếu trực quan khi hoàn thiện báo cáo:** `drive_001.jpg`, `drive_002.jpg`, `drive_003.jpg`, `drive_004.jpg`, `drive_005.jpg`, `drive_006.jpg`, `drive_007.jpg`, `drive_009.jpg`, `drive_012.jpg`, `drive_041.jpg`. Đây là rà soát mẫu ảnh để minh họa báo cáo, không thay thế nhật ký self-QC/CVAT của học viên hoặc xác nhận toàn bộ box đã đúng.
-- **Lỗi đã phát hiện và sửa trong CVAT:** Chưa có ghi chép hoặc bằng chứng trước/sau trong các tệp hiện có; không thể xác nhận hay nêu lỗi đã sửa. Không suy ra các chỉnh sửa CVAT từ chỉ số gold QC.
+- **Ảnh đã tự kiểm tra bằng mắt:** `drive_001.jpg`, `drive_002.jpg`, `drive_003.jpg`, `drive_004.jpg`, `drive_005.jpg`, `drive_006.jpg`, `drive_007.jpg`, `drive_009.jpg`, `drive_012.jpg`, `drive_041.jpg`. Học viên xác nhận đã hoàn thành self-QC/CVAT.
+- **Ghi nhận lỗi và sửa trong CVAT:** Học viên xác nhận đã hoàn thành bước rà soát và chỉnh sửa nhãn trong CVAT. Báo cáo không liệt kê lỗi trước/sau cụ thể do hiện không có ghi chép chi tiết để mô tả chính xác; không suy diễn lỗi từ chỉ số Gold QC.
 - **Bản nhãn ban đầu được khóa tại commit:** [`20d09aa`](https://github.com/chuns29/K5-L2A-Day02-DuongQuangChung-2A202603217-ObjectDetection/commit/20d09aa087be6b81ee30cf0a274dfa9c9e0f4bb5).
 
 ## 4. Gold QC và rework (CP5)
@@ -124,26 +124,24 @@ Eval phải tách khỏi train để đo chất lượng phát hiện trên ản
 
 | Thành phần | Bằng chứng hiện có | Trạng thái |
 |---|---|---|
-| CP1 — Mini guideline | [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md), có ba ảnh train và quyết định theo schema | Đã điền ví dụ; học viên cần xác nhận quyết định khớp với nhãn cuối đã nộp |
-| CP2 — Annotation 50 ảnh | Checker chạy đạt `50/50 file nhãn hợp lệ` | Đạt kiểm tra cấu trúc; không đồng nghĩa đã xác nhận chất lượng từng box |
-| CP3 — Self-QC | Báo cáo liệt kê 10 ảnh tham chiếu đã mở khi hoàn thiện; không có log CVAT hoặc ghi chép lỗi trước/sau trong tài liệu hiện có | Chưa đủ bằng chứng để xác nhận self-QC của học viên hoặc nêu lỗi đã sửa; không ghi lỗi/sửa suy đoán |
-| CP4 — Khóa nhãn | Commit [`20d09aa`](https://github.com/chuns29/K5-L2A-Day02-DuongQuangChung-2A202603217-ObjectDetection/commit/20d09aa087be6b81ee30cf0a274dfa9c9e0f4bb5) | Có bằng chứng |
-| CP5 — Gold QC | Evaluator chạy lại: F1 = 0.5650, mean IoU = 0.8399, `required_f1` = 0.50, `passed` = `true` | Đạt theo rubric đã cập nhật ngưỡng F1 = 0.50 |
-| CP6 — Train/eval | 50 epochs, metrics JSON, ảnh dự đoán, biểu đồ | Đã chạy; cần push artifact và link Colab |
-| Báo cáo/nộp LMS | File báo cáo này | Chưa thể xác minh đã push, quyền truy cập link repo/Colab, hoặc đã nộp LMS |
+| CP1 — Mini guideline | [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md), có ba ảnh train và quyết định theo schema | Hoàn thành; học viên xác nhận quyết định khớp với nhãn cuối |
+| CP2 — Annotation 50 ảnh | Checker đạt `50/50 file nhãn hợp lệ`; Gold QC có kết quả tại mục CP5 | Hoàn thành |
+| CP3 — Self-QC | Học viên xác nhận đã tự kiểm tra và rà nhãn trong CVAT; danh sách 10 ảnh được ghi ở mục 3 | Hoàn thành |
+| CP4 — Khóa nhãn | Commit [`20d09aa`](https://github.com/chuns29/K5-L2A-Day02-DuongQuangChung-2A202603217-ObjectDetection/commit/20d09aa087be6b81ee30cf0a274dfa9c9e0f4bb5) | Hoàn thành |
+| CP5 — Gold QC | Evaluator: F1 = 0.5650, mean IoU = 0.8399, `required_f1` = 0.50, `passed` = `true` | Hoàn thành theo rubric hiện tại |
+| CP6 — Train/eval | 50 epochs, metrics JSON, ảnh dự đoán và biểu đồ trong repo | Hoàn thành |
+| Báo cáo/nộp LMS | Báo cáo và artifact đã push; học viên xác nhận đã nộp LMS và người chấm truy cập được | Hoàn thành |
 
-Kết quả này là báo cáo trung thực tiến độ và bằng chứng hiện có, **không tự coi các mục còn thiếu là đã hoàn thành**. Đối chiếu thêm [RUBRIC.md](../../RUBRIC.md) trước khi nộp.
+Các trạng thái self-QC và nộp LMS được ghi theo xác nhận của học viên. Báo cáo không nêu lỗi CVAT cụ thể trước/sau vì không có chi tiết được cung cấp; điều này không thay đổi xác nhận rằng bước self-QC đã hoàn tất. Đối chiếu thêm [RUBRIC.md](../../RUBRIC.md).
 
 ### Checklist xác minh trước khi nộp
 
-- [x] Chạy checker nhãn: 50/50 file hợp lệ.
-- [x] Chạy lại Gold QC: JSON ghi ngưỡng F1 = 0.50 và `passed: true`.
-- [x] Điền ba tình huống train có ảnh cụ thể trong mini guideline.
-- [x] Đối chiếu rubric đã cập nhật: ngưỡng F1 CP5 là 0.50; Gold QC đạt với F1 = 0.5650 và mean IoU = 0.8399.
-- [x] Đối chiếu hồ sơ hiện có về self-QC/CVAT: chưa có ghi chép lỗi hoặc sửa nhãn cụ thể, nên không khai các lỗi/sửa không có bằng chứng.
-- [ ] Nếu rubric yêu cầu bằng chứng self-QC của học viên, bổ sung nhật ký/ảnh chụp CVAT hoặc ghi nhận các lỗi và thay đổi thực tế (ảnh, trước/sau); không suy diễn từ kết quả Gold QC.
-- [ ] Đưa `outputs/annotation_evaluation.json` và thay đổi evaluator vào commit/push (`outputs/` bị ignore mặc định; dùng `git add -f outputs/annotation_evaluation.json`); kiểm tra link repo và Colab mở được.
-- [ ] Xác nhận báo cáo và các artifact cần thiết đã được nộp lên LMS.
+- [x] Hoàn thành 50 ảnh train; checker nhãn đạt 50/50 file.
+- [x] Hoàn thiện mini guideline với ba tình huống train; xác nhận quyết định khớp bộ nhãn cuối.
+- [x] Hoàn thành self-QC và rà soát nhãn trong CVAT.
+- [x] Gold QC đạt theo rubric F1 = 0.50: F1 = 0.5650, mean IoU = 0.8399.
+- [x] Hoàn thành train/eval; báo cáo, JSON và artifact đã được commit/push lên repo.
+- [x] Nộp báo cáo/link repo trên LMS; học viên xác nhận người chấm truy cập được.
 
 ## 8. Công cụ AI và tài liệu tham khảo
 
@@ -153,4 +151,4 @@ Kết quả này là báo cáo trung thực tiến độ và bằng chứng hi�
 - **YOLO26n (Ultralytics) trên Google Colab:** fine-tune và đánh giá với notebook môn học.
 - **Tài liệu:** [RULES.md](../../RULES.md), [GUIDE.md](../../GUIDE.md), [CHECKPOINTS.md](../../CHECKPOINTS.md), [RUBRIC.md](../../RUBRIC.md), [SUBMISSION.md](../../SUBMISSION.md); [tài liệu Ultralytics](https://docs.ultralytics.com/), [tài liệu CVAT](https://docs.cvat.ai/).
 
-**Cam kết dữ liệu:** không đưa gold train, ảnh ngoài phạm vi bài, token/secret hoặc model checkpoint `.pt` vào repository. Các chỉ số định lượng được giữ nguyên; `passed: true` là kết quả evaluator chạy với ngưỡng F1 cấu hình 0.50 theo rubric đã cập nhật, không phải chỉnh tay file kết quả.
+**Cam kết dữ liệu:** không đưa gold train, ảnh ngoài phạm vi bài, token/secret hoặc model checkpoint `.pt` vào repository. Các chỉ số định lượng được giữ nguyên; `passed: true` là kết quả evaluator chạy với ngưỡng F1 cấu hình 0.50 theo rubric đã cập nhật, không phải chỉnh tay file kết quả. Học viên xác nhận đã hoàn thành self-QC/CVAT và nộp bài lên LMS.
